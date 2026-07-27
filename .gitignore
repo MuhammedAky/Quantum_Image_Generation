@@ -20,10 +20,6 @@ data/*
 *.pth
 *.ckpt
 
-# Results
-results/*
-!results/README.md
-
 # OS files
 .DS_Store
 Thumbs.db
