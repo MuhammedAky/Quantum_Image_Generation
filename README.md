@@ -91,4 +91,4 @@ The model receives an image and attempts to reconstruct the same image.
 Clone the repository:
 
 ```bash
-git clone YOUR_REPOSITORY_URL
+git clone https://github.com/MuhammedAky/Quantum_Image_Generation
