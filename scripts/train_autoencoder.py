@@ -1,6 +1,13 @@
 import sys
 from pathlib import Path
 
+# Projenin ana klasörünü bul
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+# Ana klasörü Python'ın modül arama yoluna ekle
+sys.path.insert(0, str(PROJECT_ROOT))
+
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -11,11 +18,14 @@ from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 
 
-# Add project root to Python path
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-sys.path.append(str(PROJECT_ROOT))
-
+# Proje içindeki dosyaları import et
 from models.autoencoder import Autoencoder
+
+from evaluation.metrics import (
+    calculate_mse,
+    calculate_psnr,
+    calculate_ssim
+)
 
 
 # -------------------------
@@ -23,7 +33,7 @@ from models.autoencoder import Autoencoder
 # -------------------------
 
 BATCH_SIZE = 128
-LATENT_DIM = 8
+LATENT_DIM = 32
 LEARNING_RATE = 1e-3
 NUM_EPOCHS = 10
 
@@ -149,22 +159,76 @@ for epoch in range(NUM_EPOCHS):
         f"Loss: {average_loss:.4f}"
     )
 
-
 # -------------------------
 # Evaluation
 # -------------------------
 
 model.eval()
 
+total_mse = 0.0
+total_ssim = 0.0
+
+number_of_batches = 0
+
 
 with torch.no_grad():
 
-    images, _ = next(iter(test_loader))
+    for images, _ in test_loader:
 
-    images = images.to(device)
+        images = images.to(device)
 
-    reconstructed = model(images)
+        reconstructed = model(images)
 
+        batch_mse = calculate_mse(
+            images,
+            reconstructed
+        )
+
+        batch_ssim = calculate_ssim(
+            images,
+            reconstructed
+        )
+
+        total_mse += batch_mse
+
+        total_ssim += batch_ssim
+
+        number_of_batches += 1
+
+
+average_mse = (
+    total_mse /
+    number_of_batches
+)
+
+
+average_ssim = (
+    total_ssim /
+    number_of_batches
+)
+
+
+average_psnr = calculate_psnr(
+    average_mse
+)
+
+
+print("\nTest Results")
+
+print(
+    f"Test MSE: "
+    f"{average_mse:.6f}"
+)
+
+print(
+    f"Test PSNR: "
+    f"{average_psnr:.2f} dB"
+)
+
+print(
+    f"Test SSIM: "
+    f"{average_ssim:.4f}"
+)
 
 # Move tensors to CPU
 images = images.cpu()
