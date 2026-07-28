@@ -94,7 +94,7 @@ print(
 transform = transforms.ToTensor()
 
 
-train_dataset = datasets.MNIST(
+train_dataset = datasets.FashionMNIST(
 
     root=(
         PROJECT_ROOT /
@@ -109,7 +109,7 @@ train_dataset = datasets.MNIST(
 )
 
 
-test_dataset = datasets.MNIST(
+test_dataset = datasets.FashionMNIST(
 
     root=(
         PROJECT_ROOT /
