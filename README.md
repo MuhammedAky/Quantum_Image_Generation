@@ -13,8 +13,8 @@ Current stage:
 - [x] MNIST dataset integration
 - [x] Classical Autoencoder implementation
 - [x] Variational Autoencoder
-- [ ] Quantum layer
-- [ ] Quantum Variational Autoencoder
+- [x] Quantum layer
+- [x] Quantum Variational Autoencoder
 - [ ] Quantum Information Bottleneck
 - [ ] Multi-dataset experiments
 - [ ] Noise experiments
