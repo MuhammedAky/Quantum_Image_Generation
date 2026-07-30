@@ -1,114 +1,42 @@
-import numpy as np
 import torch
+import torch.nn.functional as F
 
-from skimage.metrics import structural_similarity
-
-
-def calculate_mse(
+def vae_loss(
+    reconstruction,
     original,
-    reconstructed
+    mu,
+    log_var,
+    beta=1.0
 ):
-    """
-    Calculate mean squared error.
-
-    Args:
-        original:
-            Original image tensor.
-
-        reconstructed:
-            Reconstructed image tensor.
-
-    Returns:
-        MSE value.
-    """
-
-    return torch.mean(
-        (original - reconstructed) ** 2
-    ).item()
 
 
-def calculate_psnr(
-    mse,
-    max_value=1.0
-):
-    """
-    Calculate PSNR from MSE.
-
-    Args:
-        mse:
-            Mean squared error.
-
-        max_value:
-            Maximum possible pixel value.
-
-    Returns:
-        PSNR value in decibels.
-    """
-
-    if mse == 0:
-        return float("inf")
-
-    return 10 * np.log10(
-        (max_value ** 2) / mse
+# Orijinal görüntü ile yeniden oluşturulan
+# görüntü arasındaki ortalama karesel hata.
+    reconstruction_loss = F.mse_loss(
+        reconstruction,
+        original,
+        reduction="mean"
     )
 
-
-def calculate_ssim(
-    original,
-    reconstructed
-):
-    """
-    Calculate average SSIM for a batch.
-
-    Args:
-        original:
-            Original image batch.
-
-        reconstructed:
-            Reconstructed image batch.
-
-    Returns:
-        Average SSIM value.
-    """
-
-    original = (
-        original
-        .detach()
-        .cpu()
-        .numpy()
+# VAE'nin KL divergence kaybı.
+# Bu terim latent dağılımın standart normal
+# dağılıma yaklaşmasını sağlar.
+    kl_loss = -0.5 * torch.mean(
+        1
+        + log_var
+        - mu.pow(2)
+        - log_var.exp()
     )
 
-    reconstructed = (
-        reconstructed
-        .detach()
-        .cpu()
-        .numpy()
+# Toplam VAE kaybı.
+    total_loss = (
+        reconstruction_loss
+        + beta * kl_loss
     )
 
-    ssim_values = []
+    return {
+        "total_loss": total_loss,
+        "reconstruction_loss": reconstruction_loss,
+        "kl_loss": kl_loss
+    }
 
-    for i in range(
-        original.shape[0]
-    ):
-
-        original_image = (
-            original[i]
-            .squeeze()
-        )
-
-        reconstructed_image = (
-            reconstructed[i]
-            .squeeze()
-        )
-
-        score = structural_similarity(
-            original_image,
-            reconstructed_image,
-            data_range=1.0
-        )
-
-        ssim_values.append(score)
-
-    return float(
-        np.mean(ssim_values)
-    )

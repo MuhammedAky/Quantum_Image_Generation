@@ -1,5 +1,8 @@
 torch
 torchvision
-matplotlib
+pennylane
 numpy
+matplotlib
+pandas
 scikit-image
+tqdm
