@@ -10,16 +10,19 @@ The project is currently being developed incrementally, beginning with classical
 
 Current stage:
 
-- [x] MNIST dataset integration
-- [x] Classical Autoencoder implementation
-- [x] Variational Autoencoder
-- [x] Quantum layer
-- [x] Quantum Variational Autoencoder
-- [ ] Quantum Information Bottleneck
-- [ ] Multi-dataset experiments
-- [ ] Noise experiments
-- [ ] Real quantum hardware experiments
-
+- [x] MNIST veri seti ile klasik AE eğitildi
+- [x] Farklı latent boyutları denendi
+- [x] Rekonstrüksiyon metrikleri kaydedildi
+- [x] Klasik VAE eğitildi
+- [x] VAE metrikleri kaydedildi
+- [x] Hybrid VAE oluşturuldu
+- [x] PennyLane simülatörü kullanıldı
+- [x] Klasik latent bilgilerin kuantum katmana aktarılması denendi
+- [x] Gerçek QPU seçild
+- [x] Tek-qubit Ry devresi gerçek QPU’da çalıştırıldı
+- [x] 0, π/4 ve π/2 açıları için ölçüm alındı
+- [x] QPU sonuçları kaydedildi
+- [x] İdeal ve deneysel sonuçlar karşılaştırıldı
 ---
 
 ## Current Objective

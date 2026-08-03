@@ -32,3 +32,6 @@ Thumbs.db
 *.egg-info/
 dist/
 build/
+
+# IBM Quantum credentials
+scripts/setup_ibm_account.py

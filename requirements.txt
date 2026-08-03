@@ -1,8 +1,10 @@
 torch
 torchvision
 pennylane
+pennylane-qiskit
+qiskit
+qiskit-ibm-runtime
 numpy
 matplotlib
-pandas
 scikit-image
 tqdm
